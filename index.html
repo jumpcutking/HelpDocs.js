@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<script type="text/javascript" src="js/jquery-1.11.0.min.js"></script>
+	<script type="text/javascript" src="dpd.js"></script>
+	<script src="js/nicEdit.js" type="text/javascript"></script>
+	<script type="text/javascript">
+	var _r = {};
+	var _e = {};
+	var onPage = "";
+	$(function() {
+		$("body").on("click","#save", function () {
+			nicEditors.findEditor("html").saveContent();
+			
+			dpd.pages.get({name: $("#name").val()}, function(results, error) {
+				if (results.length < 1) {
+					//brand new post
+					_r = results;
+					_e = error;
+					dpd.pages.post({name: $("#name").val(), title: $("#title").val(),parent: $("#parent").val(), html: $("#html").val()}, function (response, error) {
+						if(error) {
+							$("#message").html(JSON.stringify(error));
+						} else {
+							var now = new Date();
+							$("#message").html("Saved! " + now.toString());
+						}
+					});
+					
+				} else {
+				
+					dpd.pages.put(results[0].id,{name: $("#name").val(), title: $("#title").val(),parent: $("#parent").val(), html: $("#html").val()}, function (response, error) {
+						if(error) {
+							$("#message").html(JSON.stringify(error));
+						} else {
+							var now = new Date();
+							$("#message").html("Saved! " + now.toString());
+						}
+					});
+				
+				}
+			});
+		
+		});	
+		
+		$("body").on("click","#pull", function () {
+			EditPage($("#name").val());
+		});
+		
+		$("body").on("click",".action", function() {
+			loadHelpDoc($(this).data("page"));
+		});
+		$("body").on("click","#showtoolkit", function() {
+			$('#showtoolkit').css('display','none');$('#toolkit').css('display','block');
+		});
+		$("body").on("click","#hidetoolkit", function () {
+			$('#showtoolkit').css('display','block');$('#toolkit').css('display','none');
+		});
+		
+		$("body").on("click","#new", function () {
+			$("#name").val("");
+			$("#parent").val("");
+			nicEditors.findEditor("html").setContent("");
+			nicEditors.findEditor("html").saveContent();
+		});
+		
+		loadNavigation();
+		loadHelpDoc("egt");
+	
+		//listen to docs
+		dpd.on('pages:create', function() {
+  			loadNavigation();
+		});
+		
+		dpd.on('pages:update', function(post) {
+			_r = post;
+			if (onPage == post.id) {
+				loadHelpDoc(page);
+				loadNavigation();
+			}
+		});
+				
+	});
+	
+	function loadHelpDoc(page) {
+		dpd.pages.get({name: page}, function(results, error) {
+			_r = results;
+			_e = error;
+			$("#page").html("<h2>" + results[0].title + "</h2>" + results[0].html);
+			$("#name").val(results[0].name);
+			$(".on").removeClass("on");
+			$('*[data-page="' + results[0].name + '"]').addClass("on");
+			onPage = results[0].id;
+		});
+		EditPage(page);
+	}
+	
+	function loadNavigation() {
+		$("#menu").html("");
+		dpd.pages.get({parent: "", $sort:{parent:-1}}, function(results, error) {
+			for (var i=0;i<results.length;i++) {
+				//var ele = $("a").addClass("action").data("page",results[i].name).html(results[i].name);
+				var title = results[i].title;
+				if (title == "") {title = results[i].name;}
+				$("#menu").append("<div><a class='action' href='#" + results[i].name + "' data-page='" + results[i].name + "'>" + title+ "</a><span data-parent='"  + results[i].name + "'></span></div>");
+				_loadRecursiveNavigation(results[i].name,1);
+			}
+		});
+	}
+	
+	function EditPage(page) {
+		dpd.pages.get({name: page}, function(results, error) {
+				if (!results) {
+					$("#message").html(JSON.stringify(error));
+				} else {
+					_r = results;
+					_e = error;
+					$("#name").val(results[0].name);
+					$("#parent").val(results[0].parent);
+					$("#title").val(results[0].title);
+					nicEditors.findEditor("html").setContent(results[0].html);
+					nicEditors.findEditor("html").saveContent();
+				}
+			});
+	}
+	
+	function _loadRecursiveNavigation(page,level) {
+		dpd.pages.get({parent: page, $sort:{parent:-1}}, function(results, error) {
+			for (var i=0;i<results.length;i++) {
+				//var ele = $("a").addClass("action").data("page",results[i].name).html(results[i].name);
+				var title = results[i].title;
+				if (title == undefined) {title = results[i].name;}
+				$('*[data-parent="' + results[i].parent + '"]').append("<div><a class='action' href='#" + results[i].name + "' data-page='" + results[i].name + "'>" + title + "</a><span data-parent='"  + results[i].name + "'></span></div>");
+				_loadRecursiveNavigation(results[i].name,level + 1);
+			}
+		});
+	}
+
+	</script>
+	<style>
+	h1 {padding:5px; margin:0px;}
+	#page {margin:0px; margin-left:185px; position:absolute; top:50px; left:0px;}
+	#menu {width:165px; background: #eee; position:absolute; top:75px; left:0px; margin-left:5px; margin-top:5px; padding-top:5px; padding-bottom:5px; box-shadow:0px 0px 5px #eee; border-radius:5px;}
+	#menu div div {padding-left:5px;}
+	#menu a {display:block; padding:5px; color:#777; text-decoration:none;}
+	#menu a:hover {background:#fff; border-right: #eee 5px solid; padding-right:0px; color:#777; text-decoration:none;}
+	#menu a.on {background:#fff; padding-right:5px; padding-left:2px; border-left:#eee 3px solid; color:#777; text-decoration:none;}
+	#toolkit {position:absolute; top:0px; left:0px; display:none; background:#fff; border:#ccc 1px solid; border-bottom:#ccc 3px solid; width:95%; box-shadow:0px 0px 15px #ccc;}
+	#message {display:block;}
+	#hidetoolkit {background:skyblue; position:absolute; top:0px; right:0px; padding:5px; display:block;}
+	#name {display:inline-block; width:125px;}
+	#parent {display:inline-block; width:125px;}
+	#html {height:175px;max-height:500px;width:800px; background:#fff;}
+	#showtoolkit {background:skyblue; position:absolute; top:0px; right:0px; padding:5px; display:block;}
+	</style>
+</head>
+<body>
+<header><h1>EGT Social Net Api</h1></header>
+<div id="page"></div>
+<div id="menu"></div>
+<div id="toolkit">
+	<div id="message"></div>
+	<a id="hidetoolkit">Hide</a>
+	<input placeholder="API Call: egt.apps" type="text" id="name" value=""/>
+	<input placeholder="Title" id="title" type="text"/>
+	<input placeholder="Parent" id="parent" type="text"/>
+	<textarea id="html"></textarea>
+	<input id="pull" type="button" value="Pull" /><input id="new" type="button" value="New" /><input id="save" type="button" value="Save" />
+</div>
+<a id="showtoolkit">Edit Page</a>
+<script type="text/javascript">bkLib.onDomLoaded(nicEditors.allTextAreas);</script>
+</body>
+</html>
