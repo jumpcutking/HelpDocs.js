@@ -2,7 +2,7 @@
 <html>
 <head>
 	<script type="text/javascript" src="js/jquery-1.11.0.min.js"></script>
-	<script type="text/javascript" src="dpd.js"></script>
+	 <script type="text/javascript" src="/dpd.js"></script>
 	<script src="js/nicEdit.js" type="text/javascript"></script>
 	<script type="text/javascript">
 	var _r = {};
@@ -11,7 +11,7 @@
 	$(function() {
 		$("body").on("click","#save", function () {
 			nicEditors.findEditor("html").saveContent();
-			
+
 			dpd.pages.get({name: $("#name").val()}, function(results, error) {
 				if (results.length < 1) {
 					//brand new post
@@ -25,9 +25,9 @@
 							$("#message").html("Saved! " + now.toString());
 						}
 					});
-					
+
 				} else {
-				
+
 					dpd.pages.put(results[0].id,{name: $("#name").val(), title: $("#title").val(),parent: $("#parent").val(), html: $("#html").val()}, function (response, error) {
 						if(error) {
 							$("#message").html(JSON.stringify(error));
@@ -36,16 +36,16 @@
 							$("#message").html("Saved! " + now.toString());
 						}
 					});
-				
+
 				}
 			});
-		
-		});	
-		
+
+		});
+
 		$("body").on("click","#pull", function () {
 			EditPage($("#name").val());
 		});
-		
+
 		$("body").on("click",".action", function() {
 			loadHelpDoc($(this).data("page"));
 		});
@@ -55,22 +55,22 @@
 		$("body").on("click","#hidetoolkit", function () {
 			$('#showtoolkit').css('display','block');$('#toolkit').css('display','none');
 		});
-		
+
 		$("body").on("click","#new", function () {
 			$("#name").val("");
 			$("#parent").val("");
 			nicEditors.findEditor("html").setContent("");
 			nicEditors.findEditor("html").saveContent();
 		});
-		
+
 		loadNavigation();
 		loadHelpDoc("egt");
-	
+
 		//listen to docs
 		dpd.on('pages:create', function() {
   			loadNavigation();
 		});
-		
+
 		dpd.on('pages:update', function(post) {
 			_r = post;
 			if (onPage == post.id) {
@@ -78,9 +78,9 @@
 				loadNavigation();
 			}
 		});
-				
+
 	});
-	
+
 	function loadHelpDoc(page) {
 		dpd.pages.get({name: page}, function(results, error) {
 			_r = results;
@@ -93,7 +93,7 @@
 		});
 		EditPage(page);
 	}
-	
+
 	function loadNavigation() {
 		$("#menu").html("");
 		dpd.pages.get({parent: "", $sort:{parent:-1}}, function(results, error) {
@@ -106,7 +106,7 @@
 			}
 		});
 	}
-	
+
 	function EditPage(page) {
 		dpd.pages.get({name: page}, function(results, error) {
 				if (!results) {
@@ -122,7 +122,7 @@
 				}
 			});
 	}
-	
+
 	function _loadRecursiveNavigation(page,level) {
 		dpd.pages.get({parent: page, $sort:{parent:-1}}, function(results, error) {
 			for (var i=0;i<results.length;i++) {
