@@ -1,0 +1,33 @@
+body nav.navbar-dark {
+  background:#181a1f !important;
+  display: block;
+}
+
+#title {
+  font-size:1.2rem;
+}
+
+#html, #nicEdit-main {
+  width:100%;
+  height:10rem;
+}
+
+.bg-black {
+  background:#181a1f;
+}
+
+.toolbar {
+
+}
+
+body #navbarMain, .navbar-expand-md .navbar-collapse.show {
+  display: inline-block !important;
+}
+
+#navbarMain .collapse {
+  display: none;
+}
+
+#page {
+  padding:2rem;
+}
