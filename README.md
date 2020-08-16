@@ -1,41 +1,76 @@
-HelpDocs.js
+##HelpDocs.js
 ===========
 
 Open Source Help and API Documentation built on Deployd, Node.js, and MongoDB
 
-Welcome to my easy to use Node.js & Deployd API Help Documentation site.
+It's designed for developers to quickly document projects, and api's while they are developing.
 
-INSTALL
+It's a no BS - manual - documentation.
+
+##Features
 ===========
-To install this app, first install Deployd (after you have installed Node.js).
 
-npm install deployd -g
+- Works on a developer machine
+- Quick editing, adding of pages
+- Supports full HTML - includes an editor
+- Uses The Universe CDN for a darkmode bootstrap theme, feel free to replace with your own.
+
+##INSTALL
+===========
+
+To install the app, make sure you have the latest brew, and run brew update and brew upgrade.
+
+Install Node.JS (NPM)
+
+Install MongoDB
+```shell
+$ brew tap mongodb/brew
+$ brew install mongodb-community@4.4
+```
+
+To Run the MongoDB Service
+```shell
+$ brew services start mongodb-community@4.4
+```
+
+Install the Deployd Command Line tools
+```shell
+npm install deployd-cli -g
+```
 
 Test the install by running
-
 dpd -v
 
-Create a Deployd app
+##Start HelpDocs.Js
 
+Either create the app or download HelpDocs.js from git.
+```shell
 dpd create "HelpDocs.js"
-
-This will create a "HelpDocs.js" folder where the terminal is.
-
-Go to the directory and run the applcation.
-
+```
+Navigate to the folder and run DPD
+```shell
 cd HelpDocs.js
 dpd
+```
 
-Deployed will run as long as the terminal stays open usual at port: 2403.
+Deployed will run as long as the terminal stays open.
 
-http://localhost:2403/
+Deployd should open your version of HelpDocs.js - automatically
 
-Take a glimpse at deployd and validation...
+Alternativly
 
-http://localhost:2403/dashboard
+Navigate to the folder and run
+```shell
+Node App.js
+```
 
-USAGE
+
+
+##Database Backend
 ===========
-Go to http://localhost:2403/ and read the "Getting Started Guide".
+Go to http://localhost:port/dashboard to modify your data.
 
-
+## License
+===========
+Free to use and modify, post poll requests on any generic updates.
+The Universe CDN is subject to The Universe TOS. https://egtuniverse.com/legal
