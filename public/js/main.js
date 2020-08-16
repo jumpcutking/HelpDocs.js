@@ -28,7 +28,7 @@ $(function() {
   $("body").on("click","#save", function () {
     //set the settings
 
-tinymce.triggerSave();
+    tinymce.triggerSave();
     //nicEditors.findEditor("html").saveContent();
 
     dpd.pages.get({name: $("#name").val()}, function(results, error) {
@@ -38,10 +38,11 @@ tinymce.triggerSave();
         _e = error;
         dpd.pages.post({name: $("#name").val(), title: $("#title").val(),parent: $("#parent").val(), html: $("#html").val()}, function (response, error) {
           if(error) {
-            $("#message").html(JSON.stringify(error));
+            displayMessage(JSON.stringify(error));
           } else {
             var now = new Date();
-            $("#message").html("Saved! " + now.toString());
+            displayMessage("Saved! " + now.toString());
+            loadHelpDoc($("#name").val());
           }
         });
 
@@ -49,14 +50,17 @@ tinymce.triggerSave();
 
         dpd.pages.put(results[0].id,{name: $("#name").val(), title: $("#title").val(),parent: $("#parent").val(), html: $("#html").val()}, function (response, error) {
           if(error) {
-            $("#message").html(JSON.stringify(error));
+            displayMessage(JSON.stringify(error));
+            loadHelpDoc($("#name").val());
           } else {
             var now = new Date();
-            $("#message").html("Saved! " + now.toString());
+            displayMessage("Saved! " + now.toString());
+            loadHelpDoc($("#name").val());
           }
         });
 
       }
+
     });
 
   });
@@ -75,11 +79,12 @@ tinymce.triggerSave();
     $('#showtoolkit').css('display','block');$('#toolkit').css('display','none');
   });
 
-  $("body").on("click","#new", function () {
+  $("body").on("click","#clear", function () {
     $("#name").val("");
     $("#parent").val("");
-    nicEditors.findEditor("html").setContent("");
-    nicEditors.findEditor("html").saveContent();
+    $("#title").val("");
+    tinyMCE.activeEditor.setContent("");
+    tinyMCE.saveContent();
   });
 
   loadNavigation();
@@ -128,10 +133,21 @@ function loadNavigation() {
   });
 }
 
+function displayMessage($msg) {
+    if ($("#message").is(":visible")) {
+    } else {
+      $("#message").show();
+    }
+
+    $("#message").html($msg);
+    setTimeout('$("#message").hide()',10000);
+}
+
 function EditPage(page) {
   dpd.pages.get({name: page}, function(results, error) {
       if (!results) {
-        $("#message").html(JSON.stringify(error));
+        displayMessage(JSON.stringify(error));
+
       } else {
         _r = results;
         _e = error;

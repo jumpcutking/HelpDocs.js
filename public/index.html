@@ -54,7 +54,7 @@
 
   <div class="collapse navbar-collapse" id="navbarMain">
 		<ul class="navbar-nav mr-auto">
-			<li><span id="title" class="nav-link"></span></li>
+			<li><span class="nav-link"></span></li>
       <li class="nav-item">
         <a class="nav-link" onclick="$('#toolkit').toggle('400');"><i class="far fa-edit"></i> Edit Page</a>
       </li>
@@ -68,10 +68,9 @@
 </nav>
 
 <main role="main">
+	<div id="message" class="alert alert-primary" role="alert" style="display:none;"></div>
 	<div id="toolkit" class="jumbotron bg-black" style="display:none;">
 	  <div class="container">
-
-			<div id="message" class="alert alert-primary" role="alert" style="display:none;"></div>
 
 			<div class="btn-toolbar toolbar bg-light p-2" role="toolbar" aria-label="Edit Toolbar">
 
@@ -102,6 +101,8 @@
 				 <button id="pull" type="button" class="btn btn-secondary"><i class="fas fa-download"></i></button>
 				 <!--button id="new" type="button" class="btn btn-secondary"><i class="fas fa-plus-square"></i></button-->
 				 <button id="save" type="button" class="btn btn-secondary"><i class="fas fa-save"></i></button>
+				 <button id="clear" type="button" class="btn btn-secondary"><i class="fas fa-eraser"></i></button>
+
 			 </div>
 
 			</div>
