@@ -116,8 +116,14 @@ function loadHelpDoc(page) {
     $(".on").removeClass("on");
     $('*[data-page="' + results[0].name + '"]').addClass("on");
     onPage = results[0].id;
+
+    $("#name").val(results[0].name);
+    $("#parent").val(results[0].parent);
+    $("#title").val(results[0].title);
+    tinyMCE.activeEditor.setContent(results[0].html);
+    tinyMCE.saveContent();
+    
   });
-  EditPage(page);
 }
 
 function loadNavigation() {
@@ -147,7 +153,6 @@ function EditPage(page) {
   dpd.pages.get({name: page}, function(results, error) {
       if (!results) {
         displayMessage(JSON.stringify(error));
-
       } else {
         _r = results;
         _e = error;

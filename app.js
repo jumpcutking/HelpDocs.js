@@ -5,7 +5,7 @@ var server = deployd({
   port: 8083,
   env: 'staging',
   db: {
-    connectionString: "mongodb://usr:pass@127.0.0.1:27017/udocs"
+    connectionString: "mongodb://usr:pass@127.0.0.1:27017/udocs?authSource=admin"
   }
 });
 
